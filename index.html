@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Donation Platform</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 107, 107, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+        
+        h2 {
+            color: #1a1a2e;
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        h2::before {
+            content: '';
+            width: 4px;
+            height: 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+        }
+        
+        .auth-container {
+            max-width: 480px;
+            margin: 80px auto;
+        }
+        
+        .auth-container .card {
+            padding: 50px;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-bottom: 16px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: 12px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        button:hover::before {
+            left: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button.secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+        }
+        
+        button.secondary:hover {
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.6);
+        }
+        
+        button.danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        button.danger:hover {
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            padding: 6px;
+            background: #f7fafc;
+            border-radius: 14px;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+            color: #64748b;
+        }
+        
+        .tab:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .food-grid, .request-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+        
+        .food-item, .request-item {
+            background: linear-gradient(135deg, #f8f9ff 0%, #fdfeff 100%);
+            padding: 28px;
+            border-radius: 16px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .food-item::before, .request-item::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            transition: all 0.5s ease;
+        }
+        
+        .food-item:hover::before, .request-item:hover::before {
+            top: -20%;
+            right: -20%;
+        }
+        
+        .food-item:hover, .request-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.2);
+        }
+        
+        .food-item h3, .request-item h3 {
+            color: #667eea;
+            margin-bottom: 16px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .food-item p, .request-item p {
+            color: #4a5568;
+            margin: 10px 0;
+            font-size: 0.925rem;
+            line-height: 1.6;
+            position: relative;
+        }
+        
+        .food-item strong, .request-item strong {
+            color: #2d3748;
+            font-weight: 600;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding: 24px 32px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header h1 {
+            color: white;
+            -webkit-text-fill-color: white;
+            font-size: 2rem;
+            margin: 0;
+        }
+        
+        .user-info {
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            margin-right: 20px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .alert {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border: 2px solid #b1dfbb;
+        }
+        
+        .alert-success::before {
+            content: '✓';
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #155724;
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+        }
+        
+        .alert-error {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            border: 2px solid #f1aeb5;
+        }
+        
+        .alert-error::before {
+            content: '!';
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #721c24;
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+        
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .empty-state p {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-available {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+        }
+        
+        .badge-pending {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            color: #856404;
+        }
+        
+        .badge-cancelled {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+        }
+        
+        .badge-fulfilled {
+            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+            color: #0c5460;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+            
+            .food-grid, .request-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login/Register Screen -->
+    <div id="authScreen" class="auth-container">
+        <div class="card">
+            <div class="logo">
+                <div class="logo-icon">🍽️</div>
+                <h1>Food Share</h1>
+                <p style="color: #64748b; margin-top: 8px;">Connecting donors with those in need</p>
+            </div>
+            
+            <div id="authMessage"></div>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="switchAuthTab('login')">Login</div>
+                <div class="tab" onclick="switchAuthTab('register')">Register</div>
+            </div>
+            
+            <!-- Login Form -->
+            <div id="loginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="loginUsername" placeholder="Enter your username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password">
+                </div>
+                <button onclick="login()" style="width: 100%;">Login</button>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="registerForm" class="hidden">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="regUsername" placeholder="Choose a username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="regPassword" placeholder="Choose a password">
+                </div>
+                <div class="form-group">
+                    <label>Account Type</label>
+                    <select id="regType">
+                        <option value="donator">🎁 Donator - I want to donate food</option>
+                        <option value="receiver">🤝 Receiver - I need food assistance</option>
+                    </select>
+                </div>
+                <button onclick="register()" style="width: 100%;">Create Account</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Application Screen -->
+    <div id="mainScreen" class="hidden container">
+        <div class="header">
+            <h1>🍽️ Food Share</h1>
+            <div style="display: flex; align-items: center;">
+                <span class="user-info" id="userInfo"></span>
+                <button class="secondary" onclick="logout()">Logout</button>
+            </div>
+        </div>
+        
+        <!-- Donator Dashboard -->
+        <div id="donatorDashboard" class="hidden">
+            <div class="card">
+                <h2>Add Food Donation</h2>
+                <div id="donatorMessage"></div>
+                <div class="form-group">
+                    <label>Food Name</label>
+                    <input type="text" id="foodName" placeholder="e.g., Fresh vegetables, Rice, Bread">
+                </div>
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <input type="text" id="foodQuantity" placeholder="e.g., 10 kg, 20 servings">
+                </div>
+                <div class="form-group">
+                    <label>Pickup Location</label>
+                    <input type="text" id="foodLocation" placeholder="Enter pickup address or area">
+                </div>
+                <button onclick="addFood()">✨ Add Food Donation</button>
+            </div>
+            
+            <div class="card">
+                <h2>My Food Donations</h2>
+                <button class="secondary" onclick="loadMyFood()">🔄 Refresh</button>
+                <div id="myFoodList" class="food-grid"></div>
+            </div>
+            
+            <div class="card">
+                <h2>Food Requests from Community</h2>
+                <button class="secondary" onclick="loadAllRequests()">🔄 Refresh</button>
+                <div id="allRequestsList" class="request-grid"></div>
+            </div>
+        </div>
+        
+        <!-- Receiver Dashboard -->
+        <div id="receiverDashboard" class="hidden">
+            <div class="card">
+                <div class="tabs">
+                    <div class="tab active" onclick="switchReceiverTab('available')">🍴 Available Food</div>
+                    <div class="tab" onclick="switchReceiverTab('requests')">📝 My Requests</div>
+                </div>
+                
+                <div id="availableFoodTab">
+                    <h2>Available Food</h2>
+                    <button onclick="loadAvailableFood()">🔄 Refresh List</button>
+                    <div id="availableFoodList" class="food-grid"></div>
+                </div>
+                
+                <div id="requestsTab" class="hidden">
+                    <h2>Create Food Request</h2>
+                    <div id="requestMessage"></div>
+                    <div class="form-group">
+                        <label>Food Type Needed</label>
+                        <input type="text" id="requestFoodType" placeholder="e.g., Groceries, Cooked meals, Fresh produce">
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="text" id="requestQuantity" placeholder="e.g., For 5 people, 3 days worth">
+                    </div>
+                    <button onclick="addRequest()">📤 Submit Request</button>
+                    
+                    <h2 style="margin-top: 40px;">My Requests</h2>
+                    <button class="secondary" onclick="loadMyRequests()">🔄 Refresh</button>
+                    <div id="myRequestsList" class="request-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080/api';
+        let currentUser = null;
+        let userType = null;
+        
+        function switchAuthTab(tab) {
+            const loginTab = document.querySelector('.tabs .tab:first-child');
+            const registerTab = document.querySelector('.tabs .tab:last-child');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            
+            if (tab === 'login') {
+                loginTab.classList.add('active');
+                registerTab.classList.remove('active');
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+            } else {
+                registerTab.classList.add('active');
+                loginTab.classList.remove('active');
+                registerForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+            }
+        }
+        
+        async function register() {
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+            const type = document.getElementById('regType').value;
+            
+            if (!username || !password) {
+                showAuthMessage('Please fill all fields', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username, password, type})
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAuthMessage('Registration successful! Please login.', 'success');
+                    setTimeout(() => switchAuthTab('login'), 1500);
+                } else {
+                    showAuthMessage(data.error || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                showAuthMessage('Connection error. Make sure the server is running.', 'error');
+            }
+        }
+        
+        async function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!username || !password) {
+                showAuthMessage('Please fill all fields', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username, password})
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentUser = data.username;
+                    userType = data.type;
+                    showMainScreen();
+                } else {
+                    showAuthMessage(data.error || 'Login failed', 'error');
+                }
+            } catch (error) {
+                showAuthMessage('Connection error. Make sure the server is running.', 'error');
+            }
+        }
+        
+        function showMainScreen() {
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('mainScreen').classList.remove('hidden');
+            document.getElementById('userInfo').textContent = `${currentUser} • ${userType === 'donator' ? '🎁 Donator' : '🤝 Receiver'}`;
+            
+            if (userType === 'donator') {
+                document.getElementById('donatorDashboard').classList.remove('hidden');
+                loadMyFood();
+                loadAllRequests();
+            } else {
+                document.getElementById('receiverDashboard').classList.remove('hidden');
+                loadAvailableFood();
+            }
+        }
+        
+        function logout() {
+            currentUser = null;
+            userType = null;
+            document.getElementById('mainScreen').classList.add('hidden');
+            document.getElementById('authScreen').classList.remove('hidden');
+            document.getElementById('donatorDashboard').classList.add('hidden');
+            document.getElementById('receiverDashboard').classList.add('hidden');
+        }
+        
+        async function addFood() {
+            const name = document.getElementById('foodName').value;
+            const quantity = document.getElementById('foodQuantity').value;
+            const location = document.getElementById('foodLocation').value;
+            
+            if (!name || !quantity || !location) {
+                showDonatorMessage('Please fill all fields', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/food/add`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        donator: currentUser,
+                        name, quantity, location
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showDonatorMessage('Food added successfully!', 'success');
+                    document.getElementById('foodName').value = '';
+                    document.getElementById('foodQuantity').value = '';
+                    document.getElementById('foodLocation').value = '';
+                    loadMyFood();
+                } else {
+                    showDonatorMessage(data.error || 'Failed to add food', 'error');
+                }
+            } catch (error) {
+                showDonatorMessage('Connection error', 'error');
+            }
+        }
+        
+        async function loadMyFood() {
+            try {
+                const response = await fetch(`${API_URL}/food/list`);
+                const foods = await response.json();
+                
+                const myFoods = foods.filter(f => f.donator === currentUser);
+                const container = document.getElementById('myFoodList');
+                
+                if (myFoods.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1/-1;">
+                            <div class="empty-state-icon">📦</div>
+                            <p>No food donations yet. Add your first donation above!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = myFoods.map(food => `
+                    <div class="food-item">
+                        <h3>🍲 ${food.name}</h3>
+                        <p><strong>Quantity:</strong> ${food.quantity}</p>
+                        <p><strong>Location:</strong> 📍 ${food.location}</p>
+                        <p style="margin-top: 12px;"><span class="badge badge-available">Available</span></p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading food:', error);
+            }
+        }
+        
+        async function loadAvailableFood() {
+            try {
+                const response = await fetch(`${API_URL}/food/list`);
+                const foods = await response.json();
+                
+                const container = document.getElementById('availableFoodList');
+                
+                if (foods.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1/-1;">
+                            <div class="empty-state-icon">🍽️</div>
+                            <p>No food available at the moment. Check back soon!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = foods.map(food => `
+                    <div class="food-item">
+                        <h3>🍲 ${food.name}</h3>
+                        <p><strong>Donated by:</strong> ${food.donator}</p>
+                        <p><strong>Quantity:</strong> ${food.quantity}</p>
+                        <p><strong>Location:</strong> 📍 ${food.location}</p>
+                        <div class="btn-group">
+                            <button onclick="claimFood('${food.id}')" style="flex: 1; margin: 0;">🤝 Claim Food</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading food:', error);
+            }
+        }
+        
+        async function claimFood(foodId) {
+            if (!confirm('Are you sure you want to claim this food? The donator will be notified.')) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/food/claim`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({foodId, receiver: currentUser})
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('✅ Food claimed successfully! Please contact the donator for pickup details.');
+                    loadAvailableFood();
+                } else {
+                    alert('❌ ' + (data.error || 'Failed to claim food'));
+                }
+            } catch (error) {
+                alert('❌ Connection error');
+            }
+        }
+        
+        async function addRequest() {
+            const foodType = document.getElementById('requestFoodType').value;
+            const quantity = document.getElementById('requestQuantity').value;
+            
+            if (!foodType || !quantity) {
+                showRequestMessage('Please fill all fields', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/request/add`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        receiver: currentUser,
+                        foodType, quantity
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showRequestMessage('Request submitted successfully!', 'success');
+                    document.getElementById('requestFoodType').value = '';
+                    document.getElementById('requestQuantity').value = '';
+                    loadMyRequests();
+                } else {
+                    showRequestMessage(data.error || 'Failed to submit request', 'error');
+                }
+            } catch (error) {
+                showRequestMessage('Connection error', 'error');
+            }
+        }
+        
+        async function loadMyRequests() {
+            try {
+                const response = await fetch(`${API_URL}/request/list`);
+                const requests = await response.json();
+                
+                const myRequests = requests.filter(r => r.receiver === currentUser);
+                const container = document.getElementById('myRequestsList');
+                
+                if (myRequests.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1/-1;">
+                            <div class="empty-state-icon">📝</div>
+                            <p>No requests yet. Create your first request above!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = myRequests.map(req => `
+                    <div class="request-item">
+                        <h3>📋 ${req.foodType}</h3>
+                        <p><strong>Quantity:</strong> ${req.quantity}</p>
+                        <p style="margin-top: 12px;">
+                            <span class="badge badge-${req.status === 'pending' ? 'pending' : req.status === 'cancelled' ? 'cancelled' : 'fulfilled'}">${req.status}</span>
+                        </p>
+                        <div class="btn-group">
+                            ${req.status === 'pending' ? `
+                                <button class="secondary" onclick="cancelRequest('${req.id}')" style="flex: 1; margin: 0;">❌ Cancel</button>
+                            ` : ''}
+                            <button class="danger" onclick="deleteRequest('${req.id}')" style="flex: 1; margin: 0;">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading requests:', error);
+            }
+        }
+        
+        async function loadAllRequests() {
+            try {
+                const response = await fetch(`${API_URL}/request/list`);
+                const requests = await response.json();
+                
+                // Filter out cancelled requests for donators
+                const activeRequests = requests.filter(r => r.status !== 'cancelled');
+                const container = document.getElementById('allRequestsList');
+                
+                if (activeRequests.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1/-1;">
+                            <div class="empty-state-icon">📝</div>
+                            <p>No food requests from the community yet.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = activeRequests.map(req => `
+                    <div class="request-item">
+                        <h3>📋 ${req.foodType}</h3>
+                        <p><strong>Requested by:</strong> ${req.receiver}</p>
+                        <p><strong>Quantity:</strong> ${req.quantity}</p>
+                        <p style="margin-top: 12px;">
+                            <span class="badge badge-${req.status === 'pending' ? 'pending' : 'fulfilled'}">${req.status}</span>
+                        </p>
+                        ${req.status === 'pending' ? `
+                        <div class="btn-group">
+                            <button onclick="fulfillRequest('${req.id}')" style="flex: 1; margin: 0;">✅ I Can Donate This</button>
+                        </div>
+                        ` : ''}
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading requests:', error);
+            }
+        }
+        
+        async function fulfillRequest(requestId) {
+            if (!confirm('Are you sure you want to fulfill this request? The receiver will be notified.')) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/request/fulfill`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({requestId, donor: currentUser})
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('✅ Request marked as fulfilled! Please contact the receiver to arrange donation.');
+                    loadAllRequests();
+                } else {
+                    alert('❌ ' + (data.error || 'Failed to fulfill request'));
+                }
+            } catch (error) {
+                alert('❌ Connection error');
+            }
+        }
+        
+        async function cancelRequest(requestId) {
+            if (!confirm('Are you sure you want to cancel this request?')) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/request/cancel`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({requestId, receiver: currentUser})
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('✅ Request cancelled successfully!');
+                    loadMyRequests();
+                } else {
+                    alert('❌ ' + (data.error || 'Failed to cancel request'));
+                }
+            } catch (error) {
+                alert('❌ Connection error');
+            }
+        }
+        
+        async function deleteRequest(requestId) {
+            if (!confirm('Are you sure you want to permanently delete this request?')) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/request/delete`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({requestId, receiver: currentUser})
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('✅ Request deleted successfully!');
+                    loadMyRequests();
+                } else {
+                    alert('❌ ' + (data.error || 'Failed to delete request'));
+                }
+            } catch (error) {
+                alert('❌ Connection error');
+            }
+        }
+        
+        function switchReceiverTab(tab) {
+            const availableTab = document.querySelector('#receiverDashboard .tab:first-child');
+            const requestsTabBtn = document.querySelector('#receiverDashboard .tab:last-child');
+            const availableFoodTab = document.getElementById('availableFoodTab');
+            const requestsTab = document.getElementById('requestsTab');
+            
+            if (tab === 'available') {
+                availableTab.classList.add('active');
+                requestsTabBtn.classList.remove('active');
+                availableFoodTab.classList.remove('hidden');
+                requestsTab.classList.add('hidden');
+                loadAvailableFood();
+            } else {
+                requestsTabBtn.classList.add('active');
+                availableTab.classList.remove('active');
+                requestsTab.classList.remove('hidden');
+                availableFoodTab.classList.add('hidden');
+                loadMyRequests();
+            }
+        }
+        
+        function showAuthMessage(msg, type) {
+            const el = document.getElementById('authMessage');
+            el.innerHTML = `<div class="alert alert-${type === 'error' ? 'error' : 'success'}">${msg}</div>`;
+            setTimeout(() => el.innerHTML = '', 5000);
+        }
+        
+        function showDonatorMessage(msg, type) {
+            const el = document.getElementById('donatorMessage');
+            el.innerHTML = `<div class="alert alert-${type === 'error' ? 'error' : 'success'}">${msg}</div>`;
+            setTimeout(() => el.innerHTML = '', 5000);
+        }
+        
+        function showRequestMessage(msg, type) {
+            const el = document.getElementById('requestMessage');
+            el.innerHTML = `<div class="alert alert-${type === 'error' ? 'error' : 'success'}">${msg}</div>`;
+            setTimeout(() => el.innerHTML = '', 5000);
+        }
+    </script>
+</body>
+</html>
